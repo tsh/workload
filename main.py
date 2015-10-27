@@ -3,6 +3,7 @@ import requests, json, getpass, dateutil.parser
 intresting_events = ['PushEvent', 'IssuesEvent']
 
 simple_commit_template = """
+Commit:
 Name:       {author}
 Url:        {url}
 Date:       {date}: {time}
