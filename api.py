@@ -98,6 +98,27 @@ def edit_user(id):
     return jsonify({})
 
 
+@app.route('/users/<int:id>/records/', methods=['GET'])
+def get_user_records(id):
+    user = User.query.get_or_404(id)
+    return jsonify({'records': [record.get_url() for record in user.records.all()]})
+
+
+@app.route('/users/<int:id>/records/', methods=['POST'])
+def new_record(id):
+    user = User.query.get_or_404(id)
+    record = Record(user=user)
+    record.import_data(request.json)
+    db.session.add(record)
+    db.session.commit()
+    return jsonify({}), 201, {'Location': record.get_url()}
+
+
+@app.route('/records/', methods=['GET'])
+def get_records():
+    return jsonify({'records': [record.export_data() for record in Record.query.all()]})
+
+
 if __name__ == '__main__':
     db.create_all()
     app.run(debug=True)
