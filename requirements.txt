@@ -2,6 +2,7 @@ ipdb
 ipython
 traitlets
 Flask
+Flask-Admin
 Flask-HTTPAuth
 Flask-SQLAlchemy
 Jinja2

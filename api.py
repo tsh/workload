@@ -4,6 +4,8 @@ from datetime import datetime
 from dateutil import parser as datetime_parser
 from dateutil.tz import tzutc
 from flask import Flask, url_for, jsonify, request
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 from flask.ext.sqlalchemy import SQLAlchemy
 
 from utils import url_parse
@@ -119,6 +121,12 @@ def get_records():
     return jsonify({'records': [record.export_data() for record in Record.query.all()]})
 
 
+admin = Admin(app, name='api_admin', template_mode='bootstrap3')
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Record, db.session))
+
 if __name__ == '__main__':
     db.create_all()
+    app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
     app.run(debug=True)
