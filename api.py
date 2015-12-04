@@ -6,10 +6,10 @@ from dateutil.tz import tzutc
 from flask import Flask, url_for, jsonify, request
 from flask.ext.sqlalchemy import SQLAlchemy
 
-from .utils import url_parse
+from utils import url_parse
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-db_path = os.path.join(basedir, '../data.sqlite')
+db_path = os.path.join(basedir, 'data.sqlite')
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
@@ -49,7 +49,7 @@ class Record(db.Model):
     __tablename__ = 'records'
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     # TODO: add start, end date
     timestamp = db.Column(db.DateTime, default=datetime.now)
 

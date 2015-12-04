@@ -2,7 +2,7 @@ from flask.globals import _app_ctx_stack, _request_ctx_stack
 from werkzeug.urls import url_parse
 from werkzeug.exceptions import NotFound
 
-from .api import ValidationError
+import api
 
 
 def split_url(url, method='GET'):
@@ -27,9 +27,9 @@ def split_url(url, method='GET'):
     parsed_url = url_parse(url)
     if parsed_url.netloc is not '' and \
                     parsed_url.netloc != url_adapter.server_name:
-        raise ValidationError('Invalid URL: ' + url)
+        raise api.ValidationError('Invalid URL: ' + url)
     try:
         result = url_adapter.match(parsed_url.path, method)
     except NotFound:
-        raise ValidationError('Invalid URL: ' + url)
+        raise api.ValidationError('Invalid URL: ' + url)
     return result
