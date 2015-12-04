@@ -14,7 +14,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 db_path = os.path.join(basedir, 'data.sqlite')
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///' + db_path
 
 db = SQLAlchemy(app)
 

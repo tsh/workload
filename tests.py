@@ -3,7 +3,7 @@ import api
 import unittest
 import tempfile
 
-class FlaskrTestCase(unittest.TestCase):
+class FlaskTestCase(unittest.TestCase):
 
     def setUp(self):
         self.db_fd, api.app.config['DATABASE'] = tempfile.mkstemp()
@@ -15,8 +15,9 @@ class FlaskrTestCase(unittest.TestCase):
         os.unlink(api.app.config['DATABASE'])
 
     def test_empty_db(self):
-        rv = self.app.get('/users/')
-        assert 'No entries here so far' in rv.data
+        resp = self.app.get('/users/')
+        assert False
 
 if __name__ == '__main__':
+    api.app.config['TESTING'] = True
     unittest.main()
