@@ -1,23 +1,28 @@
 import os
-import api
 import unittest
-import tempfile
+
+import api
+from api import db, User
+
 
 class FlaskTestCase(unittest.TestCase):
-
     def setUp(self):
-        self.db_fd, api.app.config['DATABASE'] = tempfile.mkstemp()
-        api.app.config['TESTING'] = True
         self.app = api.app.test_client()
+        self.user = User(name='test')
+        db.create_all()
+        db.session.add(self.user)
+        db.session.commit()
+
 
     def tearDown(self):
-        os.close(self.db_fd)
-        os.unlink(api.app.config['DATABASE'])
+        db.session.remove()
+        db.drop_all()
 
     def test_empty_db(self):
         resp = self.app.get('/users/')
-        assert False
+        self.assertIn(self.user.get_url(), resp.data)
 
 if __name__ == '__main__':
     api.app.config['TESTING'] = True
+    os.environ['DATABASE_URL'] = 'sqlite:///test.sqlite'
     unittest.main()
