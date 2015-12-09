@@ -19,7 +19,7 @@ class FlaskTestCase(unittest.TestCase):
         db.drop_all()
 
     def test_empty_db(self):
-        resp = self.app.get('/users/')
+        resp = self.app.get('api/users/')
         self.assertIn(self.user.get_url(), resp.data)
 
 if __name__ == '__main__':

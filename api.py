@@ -72,17 +72,17 @@ class Record(db.Model):
         return self
     
 
-@app.route('/users/', methods=['GET'])
+@app.route('api/users/', methods=['GET'])
 def get_users():
     return jsonify({'users': [user.get_url() for user in User.query.all()]})
 
 
-@app.route('/users/<int:id>', methods=['GET'])
+@app.route('api/users/<int:id>', methods=['GET'])
 def get_user(id):
     return jsonify(User.query.get_or_404(id).export_data())
 
 
-@app.route('/users/', methods=['POST'])
+@app.route('api/users/', methods=['POST'])
 def new_user():
     user = User()
     user.import_data(request.json)
@@ -91,7 +91,7 @@ def new_user():
     return jsonify({}), 201, {'Location': user.get_url()}
 
 
-@app.route('/users/<int:id>', methods=['PUT'])
+@app.route('api/users/<int:id>', methods=['PUT'])
 def edit_user(id):
     user = User.query.get_or_404(id)
     user.import_data(request.json)
@@ -100,13 +100,13 @@ def edit_user(id):
     return jsonify({})
 
 
-@app.route('/users/<int:id>/records/', methods=['GET'])
+@app.route('api/users/<int:id>/records/', methods=['GET'])
 def get_user_records(id):
     user = User.query.get_or_404(id)
     return jsonify({'records': [record.get_url() for record in user.records.all()]})
 
 
-@app.route('/users/<int:id>/records/', methods=['POST'])
+@app.route('api/users/<int:id>/records/', methods=['POST'])
 def new_record(id):
     user = User.query.get_or_404(id)
     record = Record(user=user)
@@ -116,7 +116,7 @@ def new_record(id):
     return jsonify({}), 201, {'Location': record.get_url()}
 
 
-@app.route('/records/', methods=['GET'])
+@app.route('api/records/', methods=['GET'])
 def get_records():
     return jsonify({'records': [record.export_data() for record in Record.query.all()]})
 
