@@ -54,10 +54,3 @@ def new_record(id):
 def get_records():
     return jsonify({'records': [record.export_data() for record in Record.query.all()]})
 
-
-
-if __name__ == '__main__':
-    db.create_all()
-    app.secret_key = 'super secret key'
-    app.config['SESSION_TYPE'] = 'filesystem'
-    app.run(debug=True)

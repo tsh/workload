@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask import url_for
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db
 from utils import url_parse
@@ -15,9 +16,17 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
     records = db.relationship('Record', backref='user', lazy='dynamic')
+    password_hash = db.Column(db.String(128))
 
     def __repr__(self):
         return "<User: {}>".format(self.name)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
 
     def get_url(self):
         return url_for('api.get_user', id=self.id, _external=True)
@@ -42,7 +51,8 @@ class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    # TODO: add start, end date
+    started = db.Column(db.DateTime)
+    finished = db.Column(db.DateTime)
     timestamp = db.Column(db.DateTime, default=datetime.now)
 
     def __repr__(self):
