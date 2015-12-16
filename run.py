@@ -1,17 +1,15 @@
-# from flask import Flask
-# from views.views import view
-#
-# app = Flask(__name__)
-# app.register_blueprint(view)
+from app import app
+from api import api
+from views import view
+
 
 
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
 if __name__ == '__main__':
-    from app import app
-    from api import api
     app.register_blueprint(api)
+    app.register_blueprint(view)
 
     from models import User, Record
     from app import db

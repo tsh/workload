@@ -14,7 +14,10 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
-    records = db.relationship('Record', backref='users', lazy='dynamic')
+    records = db.relationship('Record', backref='user', lazy='dynamic')
+
+    def __repr__(self):
+        return "<User: {}>".format(self.name)
 
     def get_url(self):
         return url_for('api.get_user', id=self.id, _external=True)
@@ -42,8 +45,11 @@ class Record(db.Model):
     # TODO: add start, end date
     timestamp = db.Column(db.DateTime, default=datetime.now)
 
+    def __repr__(self):
+        return "<Record: {}>".format(self.description[:50])
+
     def get_url(self):
-        return url_for('get_record', id=self.id, _external=True)
+        return url_for('api.get_records', id=self.id, _external=True)
 
     def export_data(self):
         return {

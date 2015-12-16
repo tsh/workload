@@ -5,7 +5,11 @@
     <title>Index</title>
 </head>
 <body>
-From Template
-{{name}}
+<p>Last Records are: </p>
+<ul>
+    {% for record in records %}
+        <li>{{ record.description }} by {{ record.user.name }}</li>
+    {% endfor %}
+</ul>
 </body>
 </html>
