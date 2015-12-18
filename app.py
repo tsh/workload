@@ -7,7 +7,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 # from models import User, Record
 
-db = SQLAlchemy()
+db = SQLAlchemy(session_options={'expire_on_commit': False})
+
 
 def create_app():
 
