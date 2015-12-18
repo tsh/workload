@@ -1,4 +1,5 @@
-from flask import jsonify, request, Blueprint, abort
+from flask import jsonify, request, Blueprint, abort, g
+import itsdangerous
 
 from app import db
 from models import User, Record
@@ -9,10 +10,11 @@ auth = HTTPBasicAuth()
 
 
 @auth.verify_password
-def verify_password(username_or_token, password):
+def verify_password(username_or_token, password=None):
     # first try to authenticate by token
-    user = User.verify_auth_token(username_or_token)
-    if not user:
+    try:
+        user = User.verify_auth_token(username_or_token)
+    except itsdangerous.BadSignature:
         # try to authenticate with username/password
         user = User.query.filter_by(username=username_or_token).first()
         if not user or not user.verify_password(password):
@@ -21,11 +23,11 @@ def verify_password(username_or_token, password):
     return True
 
 
-@api.route('/api/token')
+@api.route('/api/token/')
 @auth.login_required
 def get_auth_token():
     token = g.user.generate_auth_token()
-    return jsonify({ 'token': token.decode('ascii') })
+    return jsonify({'token': token})
 
 
 @api.route('/api/users/', methods=['GET'])

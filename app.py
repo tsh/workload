@@ -22,5 +22,5 @@ def create_app():
 
     app.secret_key = 'super secret key'
     app.config['SESSION_TYPE'] = 'filesystem'
-    # app.config['SECRET_KEY'] = 'top-secret!'
+    app.config['SECRET_KEY'] = 'top-secret!'
     return app

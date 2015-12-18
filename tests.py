@@ -1,6 +1,8 @@
+import base64
 import os
 import tempfile
 import unittest
+import json
 
 from app import create_app, db
 import api, views
@@ -27,10 +29,11 @@ class FlaskTestCase(unittest.TestCase):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + self.test_db_file
         app.config['SERVER_NAME'] = 'test'
         app.testing = True
-        self.app = app.test_client()
+        self.client = app.test_client()
 
         with app.app_context():
             self.user = models.User(username='test')
+            self.user.set_password('test')
             db.create_all()
             db.session.add(self.user)
             db.session.commit()
@@ -41,10 +44,16 @@ class FlaskTestCase(unittest.TestCase):
         # db.drop_all()
 
     def test_users(self):
-        resp = self.app.get('/api/users/')
+        resp = self.client.get('/api/users/')
         assert resp.status_code == 200
         with app.app_context():
             self.assertIn(self.user.get_url(), str(resp.data))
+
+    def test_get_token(self):
+        resp = self.client.get('api/token/', headers={'Authorization': b'Basic ' + base64.b64encode(b'test:test')})
+        token = json.loads(resp.data.decode('utf-8'))['token']
+        with app.app_context():
+            self.assertTrue(self.user.verify_auth_token(token))
 
 if __name__ == '__main__':
     # TODO: register blueprints in same place as with run.py

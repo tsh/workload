@@ -37,10 +37,7 @@ class User(db.Model):
     @staticmethod
     def verify_auth_token(token):
         s = Serializer(app.config['SECRET_KEY'])
-        try:
-            data = s.loads(token)
-        except SignatureExpired:
-            return None
+        data = s.loads(token)
         return User.query.get(data['id'])
 
     # OTHER
