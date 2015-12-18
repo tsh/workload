@@ -1,6 +1,6 @@
 from flask import jsonify, request, Blueprint, abort
 
-from app import app, db
+from app import db
 from models import User, Record
 from flask.ext.httpauth import HTTPBasicAuth
 
@@ -21,7 +21,7 @@ def verify_password(username_or_token, password):
     return True
 
 
-@app.route('/api/token')
+@api.route('/api/token')
 @auth.login_required
 def get_auth_token():
     token = g.user.generate_auth_token()

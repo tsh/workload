@@ -4,8 +4,8 @@ from flask import url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
 
-from app import db, app
-from utils import url_parse
+from app import db, create_app
+app = create_app()
 
 
 class ValidationError(ValueError):

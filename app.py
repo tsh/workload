@@ -9,16 +9,17 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+def create_app():
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-db_path = os.path.join(basedir, 'data.sqlite')
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    db_path = os.path.join(basedir, 'data.sqlite')
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///' + db_path
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///' + db_path
 
-db.init_app(app)
+    db.init_app(app)
 
-app.secret_key = 'super secret key'
-app.config['SESSION_TYPE'] = 'filesystem'
-# app.config['SECRET_KEY'] = 'top-secret!'
-
+    app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
+    # app.config['SECRET_KEY'] = 'top-secret!'
+    return app
