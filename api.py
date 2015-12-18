@@ -49,6 +49,7 @@ def new_user():
     if User.query.filter_by(username=username).first() is not None:
         abort(400)  # existing user
     user = User(username=username)
+    user.set_password(password)
     db.session.add(user)
     db.session.commit()
     return jsonify({}), 201, {'Location': user.get_url()}

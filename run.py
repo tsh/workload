@@ -8,6 +8,10 @@ from flask_admin.contrib.sqla import ModelView
 app = create_app()
 
 
+class RecordAdmin(ModelView):
+    form_excluded_columns = ('timestamp',)
+
+
 if __name__ == '__main__':
     app.register_blueprint(api)
     app.register_blueprint(view)
@@ -19,6 +23,6 @@ if __name__ == '__main__':
         # is while within this block. Therefore, you can now run........
         db.create_all()
     admin = Admin(app, name='api_admin', template_mode='bootstrap3')
-    admin.add_view(ModelView(User, db.session))
-    admin.add_view(ModelView(Record, db.session))
+    # admin.add_view(ModelView(User, db.session))
+    admin.add_view(RecordAdmin(Record, db.session))
     app.run(debug=True, port=8000)
