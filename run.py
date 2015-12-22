@@ -11,10 +11,11 @@ from models import User
 from views import view
 
 app = create_app()
+from api import auth
 
 
 class RecordAdmin(ModelView):
-    form_excluded_columns = ('timestamp',)
+    form_excluded_columns = ('timestamp',)  # TODO: add user
 
     @expose('/new/', methods=('GET', 'POST'))
     @auth.login_required
@@ -23,6 +24,16 @@ class RecordAdmin(ModelView):
             Custom create view.
         """
         return super().create_view()
+
+    def get_form(self):
+        # TODO: populate user with wtf field
+        # user = User.query.filter_by(username=auth.username()).first()
+        # form = self.get_form()
+        # form.user = user
+        return super().get_form()
+
+    def create_model(self, form):
+        return super().create_model(form)
 
 
 def create_user(username, password):
