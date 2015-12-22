@@ -1,15 +1,25 @@
-from app import create_app
-from api import api
-from views import view
-
+from flask import request
 from flask_admin import Admin
+from flask_admin.base import expose
 from flask_admin.contrib.sqla import ModelView
+
+from app import create_app
+from api import api, auth
+from views import view
 
 app = create_app()
 
 
 class RecordAdmin(ModelView):
     form_excluded_columns = ('timestamp',)
+
+    @expose('/new/', methods=('GET', 'POST'))
+    # @auth.login_required
+    def create_view(self):
+        """
+            Custom create view.
+        """
+        return super().create_view()
 
 
 if __name__ == '__main__':
