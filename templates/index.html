@@ -8,7 +8,7 @@
 <p>Last Records are: </p>
 <ul>
     {% for record in records %}
-        <li>{{ record.description }} by {{ record.user.name }}</li>
+        <li>{{ record.description }} by {{ record.user.username }}</li>
     {% endfor %}
 </ul>
 </body>

@@ -4,6 +4,7 @@ from flask import request
 from flask_admin import Admin
 from flask_admin.base import expose
 from flask_admin.contrib.sqla import ModelView
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 
 from app import create_app, db
 from api import api, auth
@@ -15,7 +16,7 @@ from api import auth
 
 
 class RecordAdmin(ModelView):
-    form_excluded_columns = ('timestamp',)  # TODO: add user
+    form_excluded_columns = ('timestamp', 'user')
 
     @expose('/new/', methods=('GET', 'POST'))
     @auth.login_required
@@ -25,15 +26,13 @@ class RecordAdmin(ModelView):
         """
         return super().create_view()
 
-    def get_form(self):
-        # TODO: populate user with wtf field
-        # user = User.query.filter_by(username=auth.username()).first()
-        # form = self.get_form()
-        # form.user = user
-        return super().get_form()
-
     def create_model(self, form):
-        return super().create_model(form)
+        record = super().create_model(form)
+        user = User.query.filter_by(username=auth.username()).first()
+        user.records.append(record)
+        db.session.add(user)
+        db.session.commit()
+        return record
 
 
 def create_user(username, password):
